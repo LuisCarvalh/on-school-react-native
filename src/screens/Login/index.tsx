@@ -3,6 +3,9 @@ import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import loginUser from '@/src/services/user';
 
+import { Bounce, ToastContainer, toast} from "react-toastify";
+
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login() {
   const [user, setUser] = useState('');
@@ -14,26 +17,28 @@ export default function Login() {
       const response = await loginUser(user, password);
       if(response.ok){
         const token = response.token;
-        Alert.alert(
-          'Login Successful',
-          `Token: ${token}`,
-          [
-            {
-              text: 'OK',
-              onPress: () => console.log('OK Pressed'),
-              style: 'cancel',
-              accessibilityLabel: 'Fechar Alerta',
-            },
-          ],
-          { cancelable: true }
-        );
-  
         navigation.navigate('Post', { token });
+      }else {
+        errorHandler();
       }
     } catch (error) {
-      Alert.alert('Login Failed', error.message);
+      errorHandler();
     }
   };
+
+  const errorHandler = () => {
+    toast.error("Erro ao realizar o login!", {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+      transition: Bounce
+    })
+  }
 
   return (
     <View style={styles.container}>
@@ -52,6 +57,20 @@ export default function Login() {
         onChangeText={setPassword}
       />
       <Button title="Login" onPress={handleButtonPress} />
+
+      <ToastContainer
+          position="bottom-center"
+          autoClose={5000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"          
+          transition={Bounce}
+          />
     </View>
   );
 }

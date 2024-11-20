@@ -18,21 +18,6 @@ interface LoginRequest {
       },
       body: JSON.stringify({ email, password }),
     });
-    if (!response.ok) {
-      Alert.alert(
-        'Login Invalido',
-        'Usuário ou senha incorretos',
-        [
-          {
-            text: 'OK',
-            onPress: () => console.log('OK Pressed'),
-            style: 'cancel',
-            accessibilityLabel: 'Fechar Alerta',
-          },
-        ],
-        { cancelable: true }
-      );
-    }
   
     const data: LoginResponse = await response.json();
     data.ok = response.ok;

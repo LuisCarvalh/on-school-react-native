@@ -2,6 +2,7 @@ import { Alert } from "react-native";
 
 interface LoginResponse {
     token: string;
+    ok:boolean;
   }
   
 interface LoginRequest {
@@ -17,7 +18,6 @@ interface LoginRequest {
       },
       body: JSON.stringify({ email, password }),
     });
-  
     if (!response.ok) {
       Alert.alert(
         'Login Invalido',
@@ -35,5 +35,6 @@ interface LoginRequest {
     }
   
     const data: LoginResponse = await response.json();
+    data.ok = response.ok;
     return data;
   }

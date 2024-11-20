@@ -8,11 +8,9 @@ const Stack = createStackNavigator();
 
 export default function AppNavigator() {
   return (
-    <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Post" component={Post} />
       </Stack.Navigator>
-    </NavigationContainer>
   );
 }

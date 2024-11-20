@@ -12,23 +12,24 @@ export default function Login() {
   const handleButtonPress = async () => {
     try {
       const response = await loginUser(user, password);
-      const token = response.token;
-
-      Alert.alert(
-        'Login Successful',
-        `Token: ${token}`,
-        [
-          {
-            text: 'OK',
-            onPress: () => console.log('OK Pressed'),
-            style: 'cancel',
-            accessibilityLabel: 'Fechar Alerta',
-          },
-        ],
-        { cancelable: true }
-      );
-
-      navigation.navigate('Post', { token });
+      if(response.ok){
+        const token = response.token;
+        Alert.alert(
+          'Login Successful',
+          `Token: ${token}`,
+          [
+            {
+              text: 'OK',
+              onPress: () => console.log('OK Pressed'),
+              style: 'cancel',
+              accessibilityLabel: 'Fechar Alerta',
+            },
+          ],
+          { cancelable: true }
+        );
+  
+        navigation.navigate('Post', { token });
+      }
     } catch (error) {
       Alert.alert('Login Failed', error.message);
     }

@@ -3,10 +3,6 @@ import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import loginUser from '@/src/services/user';
 
-import { Bounce, ToastContainer, toast} from "react-toastify";
-
-import 'react-toastify/dist/ReactToastify.css';
-
 export default function Login() {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
@@ -27,17 +23,7 @@ export default function Login() {
   };
 
   const errorHandler = () => {
-    toast.error("Erro ao realizar o login!", {
-      position: "bottom-center",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-      transition: Bounce
-    })
+    Alert.alert('Erro', 'Erro ao realizar o login!');
   }
 
   return (
@@ -57,20 +43,6 @@ export default function Login() {
         onChangeText={setPassword}
       />
       <Button title="Login" onPress={handleButtonPress} />
-
-      <ToastContainer
-          position="bottom-center"
-          autoClose={5000}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"          
-          transition={Bounce}
-          />
     </View>
   );
 }

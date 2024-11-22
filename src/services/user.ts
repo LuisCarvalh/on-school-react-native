@@ -1,4 +1,4 @@
-import { Alert } from "react-native";
+import { API_URL } from '@env';
 
 interface LoginResponse {
     token: string;
@@ -11,7 +11,7 @@ interface LoginRequest {
   }
   
   export default async function loginUser(email: string, password: string): Promise<LoginResponse> {
-    const response = await fetch('http://localhost:3000/user/signin', {
+    const response = await fetch(`${API_URL}/user/signin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

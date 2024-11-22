@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity} from 'react-native'
 import { fetchPosts } from '@/src/services/post'
+import { useNavigation } from '@react-navigation/native';
 
 export default function Post({ route }) {
   const { token } = route.params;
@@ -9,6 +10,8 @@ export default function Post({ route }) {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const navigation = useNavigation();
+
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -27,6 +30,10 @@ export default function Post({ route }) {
     loadPosts();
   }, [page, token]);
 
+  const handlePostPress = (post: Post) => {
+    navigation.navigate('PostDetails', { post });
+  };
+
   const handleLoadMore = () => {
     if (page < totalPages - 1 && !isFetchingMore) {
       setIsFetchingMore(true);
@@ -42,18 +49,22 @@ export default function Post({ route }) {
     );
   }
 
+
   return (
     <View style={styles.container}>
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.post}>
+          <TouchableOpacity
+          style={styles.post}
+          onPress={() => handlePostPress(item)}
+        >
             <Text style={styles.title}>{item.title}</Text>
             <Text>{item.content}</Text>
             <Text>Author: {item.author.name}</Text>
             <Text>Created At: {new Date(item.createdAt).toLocaleString()}</Text>
-          </View>
+            </TouchableOpacity>
         )}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
@@ -80,5 +91,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  meta: {
+    fontSize: 12,
+    color: 'gray',
   },
 });

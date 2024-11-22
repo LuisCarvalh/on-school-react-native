@@ -14,7 +14,7 @@ export default function Post({ route }) {
     const loadPosts = async () => {
       try {
         const response = await fetchPosts(token, '', page, 10);
-        setPosts(response.posts);
+        setPosts(response.data);
         setTotalPages(response.pagination.totalPages);
       } catch (error) {
         console.error('Failed to fetch posts:', error);

@@ -1,5 +1,5 @@
 interface FetchPostsResponse {
-    posts: Post[];
+    data: Post[];
     pagination: {
         totalItems: number;
         totalPages: number;

@@ -23,3 +23,19 @@ interface LoginRequest {
     data.ok = response.ok;
     return data;
   }
+
+  export async function fetchUser(token: string): Promise<User> {
+    const response = await fetch(`${API_URL}/user/me`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }});
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user');
+      }
+
+      const data: User = await response.json();
+      return data;
+  }

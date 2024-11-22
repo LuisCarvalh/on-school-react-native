@@ -25,3 +25,23 @@ export async function fetchPosts(token: string, content: string, page: number = 
     const data: FetchPostsResponse = await response.json();
     return data;
   }
+
+  export async function createPost(token: string, title: string, content: string, author: string): Promise<Post> {
+    const url = `${API_URL}/post`;
+  
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ title, content,  author}),
+    });
+  
+    if (!response.ok) {
+      throw new Error('Failed to create post');
+    }
+  
+    const data: Post = await response.json();
+    return data;
+  }

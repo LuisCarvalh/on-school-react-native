@@ -1,17 +1,40 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity} from 'react-native'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Button} from 'react-native'
 import { fetchPosts } from '@/src/services/post'
 import { useNavigation } from '@react-navigation/native';
+import { fetchUser } from '@/src/services/user';
+import Header from '@/src/componentes/shared/Header';
 
 export default function Post({ route }) {
-  const { token } = route.params;
+  const { token} = route.params;
   const [posts, setPosts] = useState<Post[]>([]);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const navigation = useNavigation();
 
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const userData = await fetchUser(token);
+        setUser(userData);
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+      }
+    };
+
+    loadUser();
+  }, [token]);
+
+  useLayoutEffect(() => {
+    if (user) {
+      navigation.setOptions({
+        headerTitle: () => <Header userName={user.name} />,
+      });
+    }
+  }, [navigation, user]);
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -52,6 +75,16 @@ export default function Post({ route }) {
 
   return (
     <View style={styles.container}>
+      {user?.isadmin && (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.createPostButton}
+            onPress={() => navigation.navigate('CreatePost', { token, userId: user.id })}
+          >
+            <Text style={styles.buttonText}>Create</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id}
@@ -77,23 +110,35 @@ export default function Post({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 16,
+  },
+  loader: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+  },
+  buttonContainer: {
+    alignItems: 'flex-end',
+    marginBottom: 10,
+  },
+  createPostButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   post: {
-    marginBottom: 20,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  meta: {
-    fontSize: 12,
-    color: 'gray',
   },
 });

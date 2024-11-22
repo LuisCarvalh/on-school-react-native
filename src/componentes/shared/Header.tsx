@@ -1,10 +1,17 @@
 import { View, Text, StyleSheet } from "react-native";
 
-export default function Header(){
+interface HeaderProps {
+    userName: string;
+  }
+
+export default function Header({ userName }: HeaderProps) {
     return(
         <View style={styles.header}>
             <View>
                 <Text style={styles.headerText}>On School</Text>
+            </View>
+            <View style={styles.userInfo}>
+                <Text style={styles.userName}>{userName}</Text>
             </View>
         </View>
     )
@@ -25,5 +32,13 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: '#333',
         letterSpacing: 1,
-      }
+      },
+      userInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      userName: {
+        fontSize: 16,
+        marginLeft: 10,
+      },
 })

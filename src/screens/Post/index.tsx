@@ -1,9 +1,10 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Button} from 'react-native'
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity} from 'react-native'
 import { fetchPosts } from '@/src/services/post'
 import { useNavigation } from '@react-navigation/native';
 import { fetchUser } from '@/src/services/user';
 import Header from '@/src/componentes/shared/Header';
+import { Searchbar } from 'react-native-paper';
 
 export default function Post({ route }) {
   const { token} = route.params;
@@ -14,6 +15,7 @@ export default function Post({ route }) {
   const [totalPages, setTotalPages] = useState(1);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const navigation = useNavigation();
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const loadUser = async () => {
@@ -72,19 +74,40 @@ export default function Post({ route }) {
     );
   }
 
+  const handleSearch = async (value: string) => {
+    setSearchQuery(value);
+    try {
+      const response = await fetchPosts(token, value, page, 10);
+      setPosts(response.data);
+      setTotalPages(response.pagination.totalPages);
+    } catch (error) {
+      console.error('Failed to fetch posts:', error);
+    } finally {
+      setLoading(false);
+      setIsFetchingMore(false);
+    }
+  };
+
 
   return (
     <View style={styles.container}>
-      {user?.isadmin && (
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.createPostButton}
-            onPress={() => navigation.navigate('CreatePost', { token, userId: user.id })}
-          >
-            <Text style={styles.buttonText}>Create</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      <View style={styles.topContainer}>
+        <Searchbar
+          placeholder="Search"
+          onChangeText={handleSearch}
+          value={searchQuery}
+        />
+        {user?.isadmin && (
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.createPostButton}
+              onPress={() => navigation.navigate('CreatePost', { token, userId: user.id })}
+            >
+              <Text style={styles.buttonText}>Create</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id}
@@ -119,7 +142,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     alignItems: 'flex-end',
-    marginBottom: 10,
   },
   createPostButton: {
     backgroundColor: '#007bff',
@@ -141,4 +163,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  topContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  }
 });

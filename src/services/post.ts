@@ -45,3 +45,23 @@ export async function fetchPosts(token: string, content: string, page: number = 
     const data: Post = await response.json();
     return data;
   }
+
+  export async function editPost(token: string, id: string, title: string, content: string, author: string): Promise<Post> {
+    const url = `${API_URL}/post/${id}`;
+  
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, title, content,  author}),
+    });
+  
+    if (!response.ok) {
+      throw new Error('Failed to update post');
+    }
+  
+    const data: Post = await response.json();
+    return data;
+  }

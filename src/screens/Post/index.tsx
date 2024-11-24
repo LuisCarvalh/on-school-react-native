@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity} from 'react-native'
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Button} from 'react-native'
 import { fetchPosts } from '@/src/services/post'
 import { useNavigation } from '@react-navigation/native';
 import { fetchUser } from '@/src/services/user';
@@ -59,6 +59,10 @@ export default function Post({ route }) {
     navigation.navigate('PostDetails', { post });
   };
 
+  const handleEditPostPress = (token, userId, post: Post) => {
+    navigation.navigate('EditPost', { token, userId, post });
+  };
+
   const handleLoadMore = () => {
     if (page < totalPages - 1 && !isFetchingMore) {
       setIsFetchingMore(true);
@@ -87,7 +91,6 @@ export default function Post({ route }) {
       setIsFetchingMore(false);
     }
   };
-
 
   return (
     <View style={styles.container}>
@@ -120,6 +123,9 @@ export default function Post({ route }) {
             <Text>{item.content}</Text>
             <Text>Author: {item.author.name}</Text>
             <Text>Created At: {new Date(item.createdAt).toLocaleString()}</Text>
+            {user?.isadmin && (
+              <Button title="Edit" onPress={() => handleEditPostPress(token, user?.id, item)}/>
+            )}
             </TouchableOpacity>
         )}
         onEndReached={handleLoadMore}

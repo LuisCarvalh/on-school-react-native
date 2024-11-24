@@ -123,6 +123,9 @@ export default function Post({ route }) {
             <Text>{item.content}</Text>
             <Text>Author: {item.author.name}</Text>
             <Text>Created At: {new Date(item.createdAt).toLocaleString()}</Text>
+            {item?.updatedAt!=null && (
+              <Text>Updated At: {new Date(item.updatedAt).toLocaleString()}</Text>
+            )}
             {user?.isadmin && (
               <Button title="Edit" onPress={() => handleEditPostPress(token, user?.id, item)}/>
             )}

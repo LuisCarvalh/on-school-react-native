@@ -2,13 +2,13 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Button} from 'react-native'
 import { fetchPosts } from '@/src/services/post'
 import { useNavigation } from '@react-navigation/native';
-import { fetchUser } from '@/src/services/user';
+import { fetchUser, fetchUserList } from '@/src/services/user';
 import Header from '@/src/componentes/shared/Header';
 import { Searchbar } from 'react-native-paper';
 
-export default function Post({ route }) {
+export default function ListUsers({ route }) {
   const { token} = route.params;
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [users, setUserList] = useState<User[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
@@ -39,29 +39,21 @@ export default function Post({ route }) {
   }, [navigation, user]);
 
   useEffect(() => {
-    const loadPosts = async () => {
+    const loadUserList = async () => {
       try {
-        const response = await fetchPosts(token, '', page, 10);
-        setPosts(response.data);
+        const response = await fetchUserList(token, '', page, 10);
+        setUserList(response.data);
         setTotalPages(response.pagination.totalPages);
       } catch (error) {
-        console.error('Failed to fetch posts:', error);
+        console.error('Failed to fetch user list:', error);
       } finally {
         setLoading(false);
         setIsFetchingMore(false);
       }
     };
 
-    loadPosts();
+    loadUserList();
   }, [page, token]);
-
-  const handlePostPress = (post: Post) => {
-    navigation.navigate('PostDetails', { post });
-  };
-
-  const handleEditPostPress = (token, userId, post: Post) => {
-    navigation.navigate('EditPost', { token, userId, post });
-  };
 
   const handleLoadMore = () => {
     if (page < totalPages - 1 && !isFetchingMore) {
@@ -81,11 +73,11 @@ export default function Post({ route }) {
   const handleSearch = async (value: string) => {
     setSearchQuery(value);
     try {
-      const response = await fetchPosts(token, value, page, 10);
-      setPosts(response.data);
+      const response = await fetchUserList(token, value, page, 10);
+      setUserList(response.data);
       setTotalPages(response.pagination.totalPages);
     } catch (error) {
-      console.error('Failed to fetch posts:', error);
+      console.error('Failed to fetch user list:', error);
     } finally {
       setLoading(false);
       setIsFetchingMore(false);
@@ -100,36 +92,15 @@ export default function Post({ route }) {
           onChangeText={handleSearch}
           value={searchQuery}
         />
-        {user?.isadmin && (
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.createPostButton}
-              onPress={() => navigation.navigate('CreatePost', { token, userId: user.id })}
-            >
-              <Text style={styles.buttonText}>Create</Text>
-            </TouchableOpacity>
-          </View>
-        )}
       </View>
       <FlatList
-        data={posts}
+        data={users}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity
-          style={styles.post}
-          onPress={() => handlePostPress(item)}
-        >
-            <Text style={styles.title}>{item.title}</Text>
-            <Text>{item.content}</Text>
-            <Text>Author: {item.author.name}</Text>
-            <Text>Created At: {new Date(item.createdAt).toLocaleString()}</Text>
-            {item?.updatedAt!=null && (
-              <Text>Updated At: {new Date(item.updatedAt).toLocaleString()}</Text>
-            )}
-            {user?.isadmin && (
-              <Button title="Edit" onPress={() => handleEditPostPress(token, user?.id, item)}/>
-            )}
-            </TouchableOpacity>
+            <View style={styles.userContainer}>
+            <Text style={styles.userInfo}>{item.name}{item?.isadmin===true && ( <Text style={styles.role}> {'('}Admin{')'}</Text>)}</Text>
+            <Text style={styles.userInfo}>{item.email}</Text>
+            </View>
         )}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
@@ -149,28 +120,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  buttonContainer: {
-    alignItems: 'flex-end',
+  userContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
-  createPostButton: {
-    backgroundColor: '#007bff',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 4,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  post: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  title: {
+  userInfo: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: 'regular',
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    marginRight: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  role: {
+    fontSize: 14,
+    fontWeight: 'bold'
   },
   topContainer: {
     flexDirection: 'row',

@@ -1,18 +1,31 @@
-import { View, Text, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 interface HeaderProps {
-    userName: string;
+    user: User;
+    token: string;
   }
 
-export default function Header({ userName }: HeaderProps) {
+export default function Header({ user, token }: HeaderProps) {
+    const navigation = useNavigation();
     return(
         <View style={styles.header}>
             <View>
                 <Text style={styles.headerText}>On School</Text>
             </View>
             <View style={styles.userInfo}>
-                <Text style={styles.userName}>{userName}</Text>
+                <Text style={styles.userName}>{user.name} </Text>
             </View>
+            {user?.isadmin==true && (
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.headerButton}
+              onPress={() => navigation.navigate('ListUsers', { token })}
+            >
+              <Text style={styles.buttonText}>Manage Users</Text>
+            </TouchableOpacity>
+          </View>
+        )}
         </View>
     )
 }
@@ -41,4 +54,18 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginLeft: 10,
       },
+      buttonContainer: {
+        alignItems: 'flex-end',
+      },
+      headerButton: {
+        backgroundColor: '#007bff',
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: 4,
+      },
+      buttonText: {
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: 'bold',
+      }
 })

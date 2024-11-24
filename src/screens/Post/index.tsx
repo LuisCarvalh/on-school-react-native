@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Button} from 'react-native'
-import { fetchPosts } from '@/src/services/post'
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity} from 'react-native'
+import { deletePost, fetchPosts } from '@/src/services/post'
 import { useNavigation } from '@react-navigation/native';
 import { fetchUser } from '@/src/services/user';
 import Header from '@/src/componentes/shared/Header';
@@ -63,6 +63,11 @@ export default function Post({ route }) {
     navigation.navigate('EditPost', { token, userId, post });
   };
 
+  const handleDelete = async (id:string) => {
+    await deletePost(token, id);
+    handleSearch(searchQuery);
+  };
+
   const handleLoadMore = () => {
     if (page < totalPages - 1 && !isFetchingMore) {
       setIsFetchingMore(true);
@@ -119,6 +124,7 @@ export default function Post({ route }) {
           style={styles.post}
           onPress={() => handlePostPress(item)}
         >
+          <View>
             <Text style={styles.title}>{item.title}</Text>
             <Text>{item.content}</Text>
             <Text>Author: {item.author.name}</Text>
@@ -126,8 +132,12 @@ export default function Post({ route }) {
             {item?.updatedAt!=null && (
               <Text>Updated At: {new Date(item.updatedAt).toLocaleString()}</Text>
             )}
+          </View>
             {user?.isadmin && (
-              <Button title="Edit" onPress={() => handleEditPostPress(token, user?.id, item)}/>
+              <View style={styles.postButtonContainer}>
+                <TouchableOpacity style={styles.editPostButton} onPress={() => handleEditPostPress(token, user?.id, item)}><Text style={styles.buttonText}>Edit</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.deletePostButton} onPress={() => handleDelete(item.id)}><Text style={styles.buttonText}>Delete</Text></TouchableOpacity>
+              </View>
             )}
             </TouchableOpacity>
         )}
@@ -167,6 +177,8 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   title: {
     fontSize: 18,
@@ -176,5 +188,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
+  },
+  deletePostButton: {
+    backgroundColor: '#ff0000',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+  },
+  editPostButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+  },
+  postButtonContainer: {
+    justifyContent: 'space-evenly'
   }
 });

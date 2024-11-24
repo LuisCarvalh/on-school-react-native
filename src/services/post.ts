@@ -65,3 +65,20 @@ export async function editPost(token: string, id: string, title: string, content
   const data: Post = await response.json();
   return data;
 }
+
+export async function deletePost(token: string, id: string): Promise<Response> {
+  const url = `${API_URL}/post/${id}`;
+
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to delete post');
+  }
+  return response;
+}

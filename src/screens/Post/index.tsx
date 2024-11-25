@@ -104,6 +104,7 @@ export default function Post({ route }) {
           placeholder="Search"
           onChangeText={handleSearch}
           value={searchQuery}
+          style={styles.searchbar}
         />
         {user?.isadmin && (
           <View style={styles.buttonContainer}>
@@ -126,12 +127,8 @@ export default function Post({ route }) {
         >
           <View>
             <Text style={styles.title}>{item.title}</Text>
-            <Text>{item.content}</Text>
-            <Text>Author: {item.author.name}</Text>
-            <Text>Created At: {new Date(item.createdAt).toLocaleString()}</Text>
-            {item?.updatedAt!=null && (
-              <Text>Updated At: {new Date(item.updatedAt).toLocaleString()}</Text>
-            )}
+            <Text>{item.content.length > 100 ? `${item.content.substring(0, 100)}...` : item.content}</Text>
+            <Text>Autor: {item.author.name}</Text>
           </View>
             {user?.isadmin && (
               <View style={styles.postButtonContainer}>
@@ -153,14 +150,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#f8f9fa',
   },
   loader: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  topContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
   buttonContainer: {
     alignItems: 'flex-end',
+  },
+  searchbar: {
+    flex: 1,
+    marginRight: 8,
   },
   createPostButton: {
     backgroundColor: '#007bff',
@@ -173,35 +181,40 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
-  post: {
+  postContainer: {
+    marginBottom: 16,
+    backgroundColor: '#fff',
+    borderRadius: 8,
     padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  post: {
+    marginBottom: 8,
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  topContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  deletePostButton: {
-    backgroundColor: '#ff0000',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 4,
-  },
-  editPostButton: {
-    backgroundColor: '#007bff',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 4,
+    marginBottom: 4,
   },
   postButtonContainer: {
-    justifyContent: 'space-evenly'
-  }
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  editPostButton: {
+    backgroundColor: '#28a745',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    marginRight: 8,
+  },
+  deletePostButton: {
+    backgroundColor: '#dc3545',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+  },
 });

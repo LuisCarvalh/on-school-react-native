@@ -34,15 +34,15 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        height: 50,
-        backgroundColor: 'transparent',
-        paddingHorizontal: 10,  
-        borderColor: 'none',                 
+        justifyContent: 'space-between',
+        height: 60,
+        backgroundColor: 'f8f9fa',
+        paddingHorizontal: 16,  
+        elevation: 2,              
     },
     headerText: {
         fontWeight: 'bold',
-        fontSize: 20,
+        fontSize: 22,
         color: '#333',
         letterSpacing: 1,
       },
@@ -52,20 +52,29 @@ const styles = StyleSheet.create({
       },
       userName: {
         fontSize: 16,
+        color: '#555',
         marginLeft: 10,
+        fontWeight: '500',
       },
       buttonContainer: {
         alignItems: 'flex-end',
       },
       headerButton: {
-        backgroundColor: '#007bff',
-        paddingVertical: 6,
+        backgroundColor: '#87CEEB',
+        paddingVertical: 8,
         paddingHorizontal: 12,
-        borderRadius: 4,
+        borderRadius: 8,
+        shadowColor: '#87CEEB', 
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 3,
+    
       },
       buttonText: {
         color: '#fff',
-        fontSize: 14,
-        fontWeight: 'bold',
+        fontSize: 15,
+        fontWeight: '600',
+        fontFamily: 'Roboto',
       }
 })

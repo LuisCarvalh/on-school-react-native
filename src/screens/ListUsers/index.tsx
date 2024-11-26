@@ -216,13 +216,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   createUserButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#28a745',
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 4,
   },
   editButton: {
-    backgroundColor: '#28a745',
+    backgroundColor: '#ed9121',
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 4,

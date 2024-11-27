@@ -1,80 +1,95 @@
-import { useNavigation } from "@react-navigation/native";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Menu, MenuOptions, MenuOption, MenuTrigger, MenuProvider } from 'react-native-popup-menu';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 interface HeaderProps {
-    user: User;
-    token: string;
-  }
+  user: User;
+  token: string;
+}
 
 export default function Header({ user, token }: HeaderProps) {
-    const navigation = useNavigation();
-    return(
-        <View style={styles.header}>
-            <View>
-                <Text style={styles.headerText}>On School</Text>
-            </View>
-            <View style={styles.userInfo}>
-                <Text style={styles.userName}>{user.name} </Text>
-            </View>
-            {user?.isadmin==true && (
+  const navigation = useNavigation();
+  return (
+    <MenuProvider>
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.headerText}>On School</Text>
+        </View>
+        <View style={styles.userInfo}>
+          <Text style={styles.userName}>{user.name}</Text>
+        </View>
+        {user?.isadmin && (
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.headerButton}
-              onPress={() => navigation.navigate('ListUsers', { token })}
-            >
-              <Text style={styles.buttonText}>Manage Users</Text>
-            </TouchableOpacity>
+            <Menu>
+              <MenuTrigger>
+                <Icon name="menu" size={30} color="#007bff" />
+              </MenuTrigger>
+              <MenuOptions customStyles={optionsStyles}>
+                <MenuOption onSelect={() => navigation.navigate('ListUsers', { token })}>
+                  <Text style={styles.menuOptionText}>Usuarios</Text>
+                </MenuOption>
+                <MenuOption onSelect={() => navigation.navigate('Post', { token })}>
+                  <Text style={styles.menuOptionText}>Posts</Text>
+                </MenuOption>
+                <MenuOption onSelect={() => navigation.navigate('Login', { token })}>
+                  <Text style={styles.menuOptionText}>Logout</Text>
+                </MenuOption>
+              </MenuOptions>
+            </Menu>
           </View>
         )}
-        </View>
-    )
+      </View>
+    </MenuProvider>
+  );
 }
 
 const styles = StyleSheet.create({
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        height: 60,
-        backgroundColor: 'f8f9fa',
-        paddingHorizontal: 16,  
-        elevation: 2,              
-    },
-    headerText: {
-        fontWeight: 'bold',
-        fontSize: 22,
-        color: '#333',
-        letterSpacing: 1,
-      },
-      userInfo: {
-        flexDirection: 'row',
-        alignItems: 'center',
-      },
-      userName: {
-        fontSize: 16,
-        color: '#555',
-        marginLeft: 10,
-        fontWeight: '500',
-      },
-      buttonContainer: {
-        alignItems: 'flex-end',
-      },
-      headerButton: {
-        backgroundColor: '#87CEEB',
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        borderRadius: 8,
-        shadowColor: '#87CEEB', 
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        elevation: 3,
-    
-      },
-      buttonText: {
-        color: '#fff',
-        fontSize: 15,
-        fontWeight: '600',
-        fontFamily: 'Roboto',
-      }
-})
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 50,
+    backgroundColor: 'transparent',
+    paddingHorizontal: 10,
+  },
+  headerText: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: '#333',
+    letterSpacing: 1,
+  },
+  userInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  userName: {
+    fontSize: 16,
+    marginLeft: 10,
+  },
+  buttonContainer: {
+    marginLeft: 10,
+  },
+  menuOptionText: {
+    fontSize: 16,
+    padding: 10,
+  },
+});
+
+const optionsStyles = {
+  optionsContainer: {
+    padding: 5,
+    width: 200,
+    zIndex: 9999,
+  },
+  optionsWrapper: {
+    backgroundColor: '#fff',
+  },
+  optionWrapper: {
+    padding: 10,
+  },
+  optionText: {
+    color: '#333',
+  },
+};

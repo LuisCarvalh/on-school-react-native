@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { createPost } from '@/src/services/post';
 
@@ -13,6 +13,7 @@ export default function CreatePost({ route }) {
   const handleCreatePost = async () => {
     try {
       await createPost(token, title, content, userId);
+      Alert.alert('', 'Conteudo criado com sucesso');
       navigation.navigate('Post', {token});
     } catch (error) {
       console.error('Failed to create post:', error);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { editPost } from '@/src/services/post';
 
@@ -13,6 +13,7 @@ export default function EditPost({ route }) {
   const handleEditPost = async () => {
     try {
       await editPost(token, id, title, content, userId);
+      Alert.alert('', 'Conteudo editado com sucesso');
       navigation.navigate('Post', {token});
     } catch (error) {
       console.error('Failed to edit post:', error);

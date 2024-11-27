@@ -52,7 +52,6 @@ export default function ListUsers({ route }) {
     }
   }, [navigation, user]);
 
-  useEffect(() => {
     const loadUsers = async () => {
       try {
         const [professorsData, studentsData] = await Promise.all([
@@ -70,6 +69,7 @@ export default function ListUsers({ route }) {
       }
     };
 
+  useEffect(() => {
     loadUsers();
   }, [token, pageProfessors, pageStudents]);
 
@@ -94,15 +94,15 @@ export default function ListUsers({ route }) {
 
   const handleDeleteUser = async (userId: string) => {
     Alert.alert(
-      'Confirma Deleção',
-      'Você confirma a deleção do usuario?',
+      '',
+      'Tem certeza que deseja excluir esse usuario?',
       [
         {
-          text: 'Cancela',
+          text: 'Cancelar',
           style: 'cancel',
         },
         {
-          text: 'Delete',
+          text: 'Confirmar',
           style: 'destructive',
           onPress: async () => {
             try {

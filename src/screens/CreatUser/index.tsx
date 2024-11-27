@@ -15,10 +15,10 @@ export default function CreateUser({ route }) {
     try {
       if (user) {
         await updateUser(token, user.id, { ...user, name, email, password, isadmin: isAdmin });
-        Alert.alert('Success', 'User updated successfully');
+        Alert.alert('', 'Usuario atualizado com sucesso');
       } else {
         await createUser(token, { name, email, password, isadmin: isAdmin });
-        Alert.alert('Success', 'User created successfully');
+        Alert.alert('', 'Usuario criado com sucesso');
       }
       navigation.navigate('ListUsers', { token });
     } catch (error) {
@@ -48,7 +48,7 @@ export default function CreateUser({ route }) {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        placeholder={user ? "Leave blank to keep current password" : ""}
+        placeholder={user ? "Deixe em branco para manter a senha atual" : ""}
       />
       <View style={styles.checkboxContainer}>
         <Text style={styles.label}>Admin</Text>

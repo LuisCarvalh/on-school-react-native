@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity} from 'react-native'
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Alert} from 'react-native'
 import { deletePost, fetchPosts } from '@/src/services/post'
 import { useNavigation } from '@react-navigation/native';
 import { fetchUser } from '@/src/services/user';
@@ -64,8 +64,29 @@ export default function Post({ route }) {
   };
 
   const handleDelete = async (id:string) => {
-    await deletePost(token, id);
-    handleSearch(searchQuery);
+    Alert.alert(
+      '',
+      'Tem certeza que deseja excluir essa publicação?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Confirmar',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deletePost(token, id);
+              handleSearch(searchQuery);
+            } catch (error) {
+              console.error('Failed to delete user:', error);
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   const handleLoadMore = () => {
@@ -151,6 +172,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f0f4f8',
+    overflow: 'visible',
   },
   loader: {
     flex: 1,

@@ -82,6 +82,7 @@ const optionsStyles = {
     padding: 5,
     width: 200,
     zIndex: 9999,
+    position: 'fixed',
   },
   optionsWrapper: {
     backgroundColor: '#fff',

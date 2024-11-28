@@ -1,0 +1,19 @@
+name: On School Action
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      # - name: Tests
+      #   run: npm run test
+
+      - name: Build
+        run: npm run build

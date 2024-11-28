@@ -168,7 +168,7 @@ export default function ListUsers({ route }) {
             indicatorStyle={styles.indicator}
             style={styles.tabBar}
             labelStyle={styles.label}
-            activeColor="#000"  // Cor do texto da aba ativa
+            activeColor="#000"
             inactiveColor="#888" 
           />
         )}
@@ -207,6 +207,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f8f9fa',
+    overflow: 'visible',
   },
   userName: {
     fontSize: 16,
